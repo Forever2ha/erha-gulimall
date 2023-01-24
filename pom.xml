@@ -19,6 +19,7 @@
         <module>gulimall-member</module>
         <module>gulimall-order</module>
         <module>gulimall-gateway</module>
+        <module>gulimall-third-party</module>
     </modules>
     <packaging>pom</packaging>
 
