@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 属性分组
@@ -18,6 +19,7 @@ import lombok.Data;
  */
 @Data
 @TableName("pms_attr_group")
+@Accessors(chain = true)
 public class AttrGroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

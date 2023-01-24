@@ -29,5 +29,19 @@
           AND search_type = 1
     </select>
 
-
+    <select id="selectNoAttrRelation" resultMap="attrMap">
+        SELECT
+            *
+        FROM
+            pms_attr
+        WHERE
+                catelog_id = ( SELECT catelog_id FROM pms_attr_group WHERE attr_group_id = #{attrgroupId} )
+          AND attr_id NOT IN (
+            SELECT
+                attr_id
+            FROM
+                pms_attr_attrgroup_relation
+        )
+          AND attr_type = 1
+    </select>
 </mapper>

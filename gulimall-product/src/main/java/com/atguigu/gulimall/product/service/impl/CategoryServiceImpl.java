@@ -87,8 +87,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         ArrayList<Long> path = new ArrayList<>();
         getCategoryPath(path,catelogId);
 
-
-
         Collections.reverse(path);
 
         return path.toArray(new Long[0]);

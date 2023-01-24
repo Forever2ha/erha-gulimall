@@ -25,6 +25,7 @@ public class ProductExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public R handleThrowable(Throwable t){
+        t.printStackTrace();
         return R.error(BizCodeEnume.UNKNOW_EXCEPTION.getCode(),
                 BizCodeEnume.UNKNOW_EXCEPTION.getMsg())
                 .setData(t.getMessage());
