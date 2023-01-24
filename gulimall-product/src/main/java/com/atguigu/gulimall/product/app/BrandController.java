@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.atguigu.common.valid.group.AddGroup;
+import com.atguigu.common.valid.group.UpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,7 +62,7 @@ public class BrandController {
      */
     @RequestMapping("/save")
  //   @RequiresPermissions("product:brand:save")
-    public R save( @RequestBody BrandEntity brand/*, BindingResult bindingResult*/){
+    public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand/*, BindingResult bindingResult*/){
 
        /* if (!bindingResult.hasErrors()){
 
@@ -83,7 +85,7 @@ public class BrandController {
      */
     @RequestMapping("/update")
   //  @RequiresPermissions("product:brand:update")
-    public R update( @RequestBody BrandEntity brand){
+    public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand){
 		brandService.updateDetail(brand);
 
         return R.ok();
