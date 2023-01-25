@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.coupon.service.impl;
 
+import com.atguigu.common.to.SkuReductionTo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import com.atguigu.gulimall.coupon.entity.SkuLadderEntity;
 import com.atguigu.gulimall.coupon.service.MemberPriceService;
 import com.atguigu.gulimall.coupon.service.SkuFullReductionService;
 import com.atguigu.gulimall.coupon.service.SkuLadderService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("skuFullReductionService")
@@ -43,6 +45,47 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    @Transactional
+    public void saveSkuReduction(SkuReductionTo skuReductionTo) {
+        //sku的优惠满减信息
+        // sms_sku_ladder
+        SkuLadderEntity skuLadder = new SkuLadderEntity();
+        BeanUtils.copyProperties(skuReductionTo,skuLadder);
+        skuLadder.setAddOther(skuReductionTo.getCountStatus());
+        if (skuLadder.getFullCount() > 0){
+            skuLadderService.save(skuLadder);
+        }
+
+
+        // sms_sku_full_reduction
+        SkuFullReductionEntity fullReduction = new SkuFullReductionEntity();
+        BeanUtils.copyProperties(skuReductionTo,fullReduction);
+        if (fullReduction.getFullPrice().compareTo(new BigDecimal(0)) > 0){
+            this.save(fullReduction);
+        }
+
+
+        // sms_member_price
+        List<SkuReductionTo.MemberPrice> memberPrices = skuReductionTo.getMemberPrice();
+        if (memberPrices != null && !memberPrices.isEmpty()){
+            List<MemberPriceEntity> collect = memberPrices.stream()
+                    .map(member -> {
+                        MemberPriceEntity entity = new MemberPriceEntity();
+                        entity.setSkuId(skuReductionTo.getSkuId())
+                                .setMemberLevelId(member.getId())
+                                .setMemberPrice(member.getPrice())
+                                .setMemberLevelName(member.getName())
+                                .setAddOther(1);
+                        return entity;
+                    })
+                    .filter(memberPrice -> memberPrice.getMemberPrice().compareTo(new BigDecimal("0")) > 0)
+                    .collect(Collectors.toList());
+            memberPriceService.saveBatch(collect);
+        }
+
     }
 
 

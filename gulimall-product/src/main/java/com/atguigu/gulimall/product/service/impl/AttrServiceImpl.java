@@ -166,13 +166,13 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
     @Override
     public PageUtils querySaleAttrList(Map<String, Object> params, Long catelogId) {
         IPage<AttrEntity> page = new Query<AttrEntity>().getPage(params);
-        String key = String.valueOf(params.get("key"));
+        Object key = params.get("key");
         QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
         wrapper.eq("attr_type", AttrConstant.AttrEnum.ATTR_TYPE_SALE.getCode());
         if (!catelogId.equals(0L)){
             wrapper.eq("catelog_id",catelogId);
         }
-        if (!StringUtils.isBlank(key)){
+        if (key != null){
             wrapper.and((w)->{
                 w.eq("attr_id",key)
                         .or().like("attr_name",key);

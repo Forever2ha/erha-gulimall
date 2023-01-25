@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.io.Serializable;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 商品会员价格
@@ -17,6 +18,7 @@ import lombok.Data;
  */
 @Data
 @TableName("sms_member_price")
+@Accessors(chain = true)
 public class MemberPriceEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
