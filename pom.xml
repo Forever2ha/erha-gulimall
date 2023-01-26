@@ -20,6 +20,7 @@
         <module>gulimall-order</module>
         <module>gulimall-gateway</module>
         <module>gulimall-third-party</module>
+        <module>gulimall-elasticsearch</module>
     </modules>
     <packaging>pom</packaging>
 

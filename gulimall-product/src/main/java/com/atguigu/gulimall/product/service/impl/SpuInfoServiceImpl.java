@@ -1,9 +1,11 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.common.to.SkuEsModel;
 import com.atguigu.common.to.SkuReductionTo;
 import com.atguigu.common.to.SpuBoundTo;
 import com.atguigu.gulimall.product.feign.CouponFeignService;
+import com.atguigu.gulimall.product.feign.ElasticSearchFeignService;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -221,9 +223,22 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    ElasticSearchFeignService elasticSearchFeignService;
+
     @Override
     @Transactional
     public void upSpu(Long spuId) {
+        // 得到EsSkuModelList
+        List<SkuEsModel> esModelList = skuInfoService.getSkusBySpuId(spuId);
+        // 让es去保存
+        R r = elasticSearchFeignService.save(esModelList);
+        if (!r.getCode().equals(0)){
+            throw new RuntimeException("[es保存失败!]");
+        }
+        // 修改spu上架状态信息
+        this.update(new UpdateWrapper<SpuInfoEntity>().eq("id",spuId).set("publish_status",1));
+
 
     }
 

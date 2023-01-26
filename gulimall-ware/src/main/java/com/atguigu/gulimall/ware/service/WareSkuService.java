@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.ware.service;
 
+import com.atguigu.common.to.SkuHasStockTo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import com.atguigu.common.utils.PageUtils;
@@ -22,6 +23,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
 
+    List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds);
 
 }
 

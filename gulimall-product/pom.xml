@@ -17,6 +17,7 @@
             <groupId>com.atguigu.gulimall</groupId>
             <artifactId>gulimall-common</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>

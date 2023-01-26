@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.atguigu.common.to.SkuHasStockTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,8 @@ public class WareSkuController {
     //获取sku是否有库存
     @PostMapping("/skuHasStock")
     public R skuHasStock(@RequestBody List<Long> skuIds){
-        return R.ok();
+        List<SkuHasStockTo> res = wareSkuService.getSkusHasStock(skuIds);
+        return R.ok().setData(res);
     }
 
     /**

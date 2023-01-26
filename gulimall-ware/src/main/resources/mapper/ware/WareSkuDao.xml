@@ -22,5 +22,18 @@
           AND sku_id = #{skuId}
     </select>
 
-
+    <select id="getHasStock" resultType="com.atguigu.common.to.SkuHasStockTo">
+        SELECT
+            sku_id,
+            IF(SUM( stock - stock_locked ) > 0,1,0) AS hasStock
+        FROM
+            wms_ware_sku
+        WHERE
+            sku_id IN
+            <foreach collection="skuIds" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+        GROUP BY
+            sku_id
+    </select>
 </mapper>

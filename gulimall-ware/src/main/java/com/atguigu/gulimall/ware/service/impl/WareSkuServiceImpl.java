@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.ware.service.impl;
 
+import com.atguigu.common.to.SkuHasStockTo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,12 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds) {
+        if (skuIds.isEmpty()) return new ArrayList<>();
+        return this.baseMapper.getHasStock(skuIds);
     }
 
 
