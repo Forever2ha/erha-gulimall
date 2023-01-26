@@ -160,6 +160,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 skuInfo.setCatalogId(spuInfoEntity.getCatalogId());
                 skuInfo.setBrandId(spuInfoEntity.getBrandId());
                 skuInfo.setSaleCount(0L);
+                skuInfo.setSkuDesc(sku.getSkuSubtitle());
                 for (SpuSaveInfoVo.Images image : sku.getImages()) {
                     if (image.getDefaultImg().equals(1)){
                         skuInfo.setSkuDefaultImg(image.getImgUrl());
