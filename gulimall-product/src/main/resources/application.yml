@@ -19,3 +19,8 @@ spring:
     cache: false
   redis:
     host: 192.168.17.100
+  cache:
+    type: redis
+    redis:
+      time-to-live: 360000
+      cache-null-values: true

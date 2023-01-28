@@ -8,6 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
+@EnableCaching
 @EnableDiscoveryClient//开启服务注册功能
 //@MapperScan("com.atguigu.gulimall.product.dao")
 @SpringBootApplication

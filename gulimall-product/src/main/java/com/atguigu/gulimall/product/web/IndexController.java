@@ -40,7 +40,7 @@ public class IndexController {
     public String indexPage(Model model){
         // 查出所有一级分类
         model.addAttribute("categorys",
-                categoryService.list(new QueryWrapper<CategoryEntity>().eq("parent_cid",0))
+                categoryService.getLevel1Category()
                 );
         return "index";
     }

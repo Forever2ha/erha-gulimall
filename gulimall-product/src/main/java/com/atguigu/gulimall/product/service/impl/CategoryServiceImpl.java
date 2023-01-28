@@ -2,6 +2,7 @@ package com.atguigu.gulimall.product.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.common.constant.product.CategoryConstant;
 import com.atguigu.gulimall.product.entity.CategoryBrandRelationEntity;
 import org.apache.commons.lang.StringUtils;
 
@@ -39,6 +40,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Autowired
     StringRedisTemplate redisTemplate;
 
+
+
     @Autowired
     RedissonClient redissonClient;
 
@@ -63,7 +66,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 log.error("查数据库！！！！！！！！！！！！！！！！！！！！！！！");
                 result = getFromDb();
                 // 放入缓存
-                redisTemplate.opsForValue().set("catalogJSON",JSON.toJSONString(result));
+                redisTemplate.opsForValue().set("catalogJSON",JSON.toJSONString(result),10,TimeUnit.MINUTES);
             }else {
                 return cacheNd;
             }
@@ -160,7 +163,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return path.toArray(new Long[0]);
     }
 
-@CacheEvict(value = "category",key = "'43  '")
+    @CacheEvict(cacheNames = CategoryConstant.CACHE_KEY_CATALOG_JSON,allEntries = true)
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -200,7 +203,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     }
 
     @Override
+    @Cacheable(value = CategoryConstant.CACHE_KEY_CATALOG_JSON,key = "#root.methodName")
     public List<CategoryEntity> getLevel1Category() {
+        log.error("查询数据库！！！！！！！");
         return baseMapper.selectList(
                 new QueryWrapper<CategoryEntity>().eq("parent_cid",0)
         );
@@ -208,6 +213,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(cacheNames = CategoryConstant.CACHE_KEY_CATALOG_JSON,allEntries = true)
     public void updateCascadeSort(List<CategoryEntity> categoryEntityList) {
         // 1. 修改category
         this.updateBatchById(categoryEntityList);
