@@ -16,13 +16,12 @@ public class SearchController {
     @Autowired
     MallSearchService mallSearchService;
 
-    @GetMapping("/list")
+    @GetMapping("/list.html")
     public String listPage(SearchParam param, Model model, HttpServletRequest request) {
 
         param.set_queryString(request.getQueryString());
         SearchResult result = mallSearchService.search(param);
         model.addAttribute("result", result);
-        System.out.println("1111111111111");
         return "list";
     }
 

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/static/search/css/index.css">
     <link rel="stylesheet" type="text/css" href="/static/search/font/iconfont.css">
-    <!--<script src="/static/search/./js/jquery-3.2.1.min.js"></script>-->
+    <!--<script src="/static/search/js/jquery-3.2.1.min.js"></script>-->
     <script src="/static/search/js/jquery-1.12.4.js"></script>
     <title>Document</title>
 </head>
@@ -400,7 +400,7 @@
 <!--搜索导航-->
 <div class="header_sous">
     <div class="logo">
-        <a href="http://gulimall.com"><img src="/static/search/./image/logo1.jpg" alt=""></a>
+        <a href="http://gulimall.com"><img src="/static/search/image/logo1.jpg" alt=""></a>
     </div>
     <div class="header_form">
         <input id="keyword_input" type="text" placeholder="手机" th:value="${param.keyword}"/>
@@ -519,12 +519,7 @@
                             <a href="/static/search/#" style="color: #999;">存电器</a>
                             <a href="/static/search/#" style="color: #999;">手机耳机</a>
                             <a href="/static/search/#" style="color: #999;">创业配件</a>
-                            <a href="/static/search/#" style="color: #999;">手机饰品</a>
-                            <a href="/static/search/#" style="color: #999;">手机电池</a>
-                            <a href="/static/search/#" style="color: #999;">苹果周边</a>
-                            <a href="/static/search/#" style="color: #999;">移动电源</a>
-                            <a href="/static/search/#" style="color: #999;">蓝牙耳机</a>
-                            <a href="/static/search/#" style="color: #999;">手机支架</a>
+                            <a href="/static/search/#" style="color: #999;">手机饰品</a>${}
                             <a href="/static/search/#" style="color: #999;">车载配件</a>
                             <a href="/static/search/#" style="color: #999;">拍照配件</a>
 
@@ -674,7 +669,7 @@
             <div class="bd mc">
                 <ul class="mc">
                     <li>
-                        <a href="/static/search/#" class="mc_a"><img src="/static/search/./img/5a28b5a1n8a5c095f.jpg"
+                        <a href="/static/search/#" class="mc_a"><img src="/static/search/img/5a28b5a1n8a5c095f.jpg"
                                                                      alt=""></a>
                         <div class="mc_div">
                             <a href="/static/search/#" class="mc_div_a1">
@@ -689,7 +684,7 @@
                         </div>
                     </li>
                     <li>
-                        <a href="/static/search/#" class="mc_a"><img src="/static/search/./img/59f5eef1n99542494.jpg"
+                        <a href="/static/search/#" class="mc_a"><img src="/static/search/img/59f5eef1n99542494.jpg"
                                                                      alt=""></a>
                         <div class="mc_div">
                             <a href="/static/search/#" class="mc_div_a1">
@@ -704,7 +699,7 @@
                         </div>
                     </li>
                     <li style="margin-right: 0">
-                        <a href="/static/search/#" class="mc_a"><img src="/static/search/./img/59f5eef1n99542494.jpg"
+                        <a href="/static/search/#" class="mc_a"><img src="/static/search/img/59f5eef1n99542494.jpg"
                                                                      alt=""></a>
                         <div class="mc_div">
                             <a href="/static/search/#" class="mc_div_a1">
@@ -783,9 +778,9 @@
                 <h3><b>手机</b><em>商品筛选</em></h3>
                 <div class="st-ext">共&nbsp;<span>10135</span>个商品</div>
             </div>
-            <div class="JD_nav_logo">
+            <div class="JD_nav_logo" th:with="brandId=${param.brandId}" >
                 <!--品牌-->
-                <div class="JD_nav_wrap">
+                <div th:if="${#strings.isEmpty(brandId)}" class="JD_nav_wrap">
                     <div class="sl_key">
                         <span><b>品牌：</b></span>
                     </div>
@@ -849,7 +844,7 @@
                 </div>
 
                 <!--其它的所有需要展示的属性-->
-                <div class="JD_pre" th:each="attr : ${result.attrs}">
+                <div class="JD_pre"  th:each="attr:${result.attrs}" th:if="${!#lists.contains(result.attrIds, attr.attrId)}">
                     <div class="sl_key">
                         <span th:text="${attr.attrName}">屏幕尺寸：</span>
                     </div>
@@ -1208,14 +1203,14 @@
                     </div>
                     <!--排序内容，每四个是一组-->
                     <div class="rig_tab">
-                        <div th:each="product : ${result.getProducts()}">
+                        <div th:each="product : ${result.products}">
                             <div class="ico">
                                 <i class="iconfont icon-weiguanzhu"></i>
                                 <a href="/static/search/#">关注</a>
                             </div>
                             <p class="da">
-                                <a th:href="|http://item.gulimall.com/${product.getSkuId()}.html|" >
-                                    <img   class="dim" th:src="${product.getSkuImg()}">
+                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|" >
+                                    <img   class="dim" th:src="${product.skuImg}">
                                 </a>
                             </p>
                             <ul class="tab_im">
@@ -2020,25 +2015,21 @@
     })
 
 
-    function searchProducts(name, value) {
+    function searchProducts(name, value, bool) {
         //原來的页面
         location.href = replaceParamVal(location.href,name,value,true)
     }
 
 
     function searchByKeyword() {
-        searchProducts("keyword", $("#keyword_input").val());
+        location.href = replaceParamVal(location.href,"keyword",$("#keyword_input").val(),false)
     }
 
     $(".page_a").click(function () {
         var pn = $(this).attr("pn");
         var href = location.href;
-        if (href.indexOf("pageNum") != -1) {
-            //替换pageNum
-            location.href = replaceParamVal(href, "pageNum", pn);
-        } else {
-            location.href = location.href + "&pageNum=" + pn;
-        }
+        location.href = replaceParamVal(href, "pageNum", pn, false);
+
         return false;
     })
 
