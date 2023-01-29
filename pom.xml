@@ -21,6 +21,7 @@
         <module>gulimall-gateway</module>
         <module>gulimall-third-party</module>
         <module>gulimall-elasticsearch</module>
+        <module>gulimall-auth-server</module>
     </modules>
     <packaging>pom</packaging>
 

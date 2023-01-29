@@ -4,12 +4,10 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.atguigu.gulimall.member.vo.MemLoginVo;
+import com.atguigu.gulimall.member.vo.RegisterMemVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
@@ -45,6 +43,21 @@ public class MemberController {
         return R.ok()
                 .put("member",memberEntity)
                 .put("coupons",r.get("coupons"));
+    }
+
+
+
+    @PostMapping("/register")
+    public R register(@RequestBody RegisterMemVo registerMemVo){
+        memberService.register(registerMemVo);
+        return  R.ok();
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemLoginVo vo){
+        MemberEntity entity = memberService.login(vo);
+        if (entity == null) return R.error("用户名或密码错误/未注册");
+        return R.ok();
     }
 
     /**
