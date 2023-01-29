@@ -14,5 +14,24 @@
         <result property="quickShow" column="quick_show"/>
     </resultMap>
 
+    <resultMap id="SpuItemAttrGroupVo" type="com.atguigu.gulimall.product.vo.SkuItemVo$SpuItemAttrGroupVo">
+        <id column="group_name" property="groupName"/>
+        <collection property="attrs" ofType="com.atguigu.gulimall.product.vo.SpuSaveInfoVo$Attr">
+            <result column="attr_id" property="attrId"/>
+            <result column="attr_name" property="attrName"/>
+            <result column="attr_value" property="attrValue"/>
+        </collection>
+    </resultMap>
 
+    <select id="selectSpuItemAttrGroupVoList" resultMap="SpuItemAttrGroupVo">
+        SELECT
+            ag.attr_group_name AS group_name,
+            pav.attr_id,
+            pav.attr_name,
+            pav.attr_value
+        FROM
+                ( SELECT * FROM pms_product_attr_value WHERE spu_id = #{spuId} ) pav
+                    LEFT JOIN pms_attr_attrgroup_relation aar ON pav.attr_id = aar.attr_id
+                    LEFT JOIN pms_attr_group ag ON aar.attr_group_id = ag.attr_group_id
+    </select>
 </mapper>

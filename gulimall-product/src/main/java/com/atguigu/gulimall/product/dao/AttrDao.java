@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.dao;
 
+import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
 import com.atguigu.gulimall.product.entity.AttrEntity;
@@ -21,4 +22,6 @@ public interface AttrDao extends BaseMapper<AttrEntity> {
     List<Long> selectSearchIds(@Param("attrIds") List<Long> allAttrIds);
 
     IPage<AttrEntity> selectNoAttrRelation(@Param("attrgroupId") Long attrgroupId, IPage<AttrEntity> page);
+
+    List<SkuItemVo.SkuItemSaleAttrVo> selectSkuItemSaleAttrVo(@Param("spuId") Long spuId);
 }

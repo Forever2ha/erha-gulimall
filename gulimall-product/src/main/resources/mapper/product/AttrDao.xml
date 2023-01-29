@@ -44,4 +44,33 @@
         )
           AND attr_type = 1
     </select>
+
+    <resultMap id="SkuItemSaleAttrVoMap" type="com.atguigu.gulimall.product.vo.SkuItemVo$SkuItemSaleAttrVo">
+        <id column="attr_id" property="attrId"/>
+        <result column="attr_name" property="attrName"/>
+        <collection property="attrValues" ofType="com.atguigu.gulimall.product.vo.SkuItemVo$AttrValueWithSkuIdVo">
+            <result column="attr_value" property="attrValue"/>
+            <result column="sku_ids" property="skuIds"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectSkuItemSaleAttrVo" resultMap="SkuItemSaleAttrVoMap">
+        SELECT
+            attr_id,
+            attr_name,
+            attr_value,
+            GROUP_CONCAT(DISTINCT sku_id) AS sku_ids
+        FROM
+            pms_sku_sale_attr_value
+        WHERE
+                sku_id IN (
+                SELECT
+                    sku_id
+                FROM
+                    pms_sku_info
+                WHERE
+                    spu_id = 27)
+
+        GROUP BY attr_id,attr_value
+    </select>
 </mapper>

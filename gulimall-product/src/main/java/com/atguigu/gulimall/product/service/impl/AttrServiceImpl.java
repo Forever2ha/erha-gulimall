@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import com.atguigu.common.constant.product.AttrConstant;
+import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.atguigu.gulimall.product.vo.SpuSaveInfoVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang.StringUtils;
@@ -219,6 +220,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
     @Override
     public List<Long> selectSearchIds(List<Long> allAttrIds) {
         return baseMapper.selectSearchIds(allAttrIds);
+    }
+
+    @Override
+    public List<SkuItemVo.SkuItemSaleAttrVo> list(Long spuId) {
+        return baseMapper.selectSkuItemSaleAttrVo(spuId);
     }
 
 }

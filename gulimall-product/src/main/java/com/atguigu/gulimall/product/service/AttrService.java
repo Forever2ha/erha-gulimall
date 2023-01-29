@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.service;
 
+import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.gulimall.product.entity.AttrEntity;
@@ -35,5 +36,7 @@ public interface AttrService extends IService<AttrEntity> {
     PageUtils getNoattrRelation(Long attrgroupId, Map<String, Object> params);
 
     List<Long> selectSearchIds(List<Long> allAttrIds);
+
+    List<SkuItemVo.SkuItemSaleAttrVo> list(Long spuId);
 }
 

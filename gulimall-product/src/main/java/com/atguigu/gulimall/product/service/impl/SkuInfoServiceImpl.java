@@ -7,6 +7,7 @@ import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.product.entity.*;
 import com.atguigu.gulimall.product.feign.WareFeignService;
 import com.atguigu.gulimall.product.service.*;
+import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -14,10 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -43,6 +45,10 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Autowired
     ProductAttrValueService attrValueService;
+    @Autowired
+    SkuImagesService skuImagesService;
+    @Autowired
+    SpuInfoDescService spuInfoDescService;
 
     @Autowired
     WareFeignService wareFeignService;
@@ -157,6 +163,77 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
                     return skuEsModel;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SkuItemVo item(Long skuId) {
+        if (skuId == null) return null;
+        SkuItemVo skuItemVo = new SkuItemVo();
+        // 1.获取基本信息 pms_sku_info
+        CompletableFuture<Object> f1 = CompletableFuture.supplyAsync(() -> {
+            SkuInfoEntity skuInfoEntity = getById(skuId);
+            skuItemVo.setInfo(skuInfoEntity);
+            return skuInfoEntity;
+        }).thenApplyAsync((skuInfoEntity -> {
+            // 1.5 查看是否有库存
+            CompletableFuture<Void> f1_5 = CompletableFuture.supplyAsync(() -> {
+                try {
+                    R r = wareFeignService.skuHasStock(Collections.singletonList(skuInfoEntity.getSkuId()));
+                    Boolean hasStock = r.getData(new TypeReference<List<SkuHasStockTo>>() {
+                    }).get(0).getHasStock();
+                    skuItemVo.setHasStock(hasStock);
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                    skuItemVo.setHasStock(false);
+                }
+                return null;
+            });
+            // 3.获取spu的销售属性组合
+            CompletableFuture<Void> f3 = CompletableFuture.supplyAsync(() -> {
+                List<SkuItemVo.SkuItemSaleAttrVo> list = attrService.list(skuInfoEntity.getSpuId());
+                skuItemVo.setSaleAttr(list);
+                return null;
+            });
+
+            // 4.获取spu介绍
+            CompletableFuture<Void> f4 = CompletableFuture.supplyAsync(() -> {
+                skuItemVo.setDesc(spuInfoDescService.getOne(new QueryWrapper<SpuInfoDescEntity>()
+                        .eq("spu_id",skuInfoEntity.getSpuId())));
+                return null;
+            });
+
+            // 5.获取spu规格参数信息
+            CompletableFuture<Void> f5 = CompletableFuture.supplyAsync(() -> {
+                List<SkuItemVo.SpuItemAttrGroupVo> list = attrValueService.list(skuInfoEntity.getSpuId());
+                skuItemVo.setGroupAttrs(list);
+                return null;
+            });
+
+            CompletableFuture<Void> all = CompletableFuture.allOf(f3, f1_5, f5, f4);
+            try {
+                all.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }));
+
+        // 2.获取sku图片信息
+        CompletableFuture<Void> f2 = CompletableFuture.supplyAsync(() -> {
+            List<SkuImagesEntity> list = skuImagesService.list(new QueryWrapper<SkuImagesEntity>().eq("sku_id", skuId));
+            skuItemVo.setImages(list);
+            return null;
+        });
+
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(f1,f2);
+        try {
+            allOf.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
+        return skuItemVo;
     }
 
 }
