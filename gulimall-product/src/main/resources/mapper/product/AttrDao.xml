@@ -69,7 +69,7 @@
                 FROM
                     pms_sku_info
                 WHERE
-                    spu_id = 27)
+                    spu_id = #{spuId})
 
         GROUP BY attr_id,attr_value
     </select>

@@ -15,6 +15,10 @@ import com.atguigu.gulimall.member.service.MemberService;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -57,7 +61,7 @@ public class MemberController {
     public R login(@RequestBody MemLoginVo vo){
         MemberEntity entity = memberService.login(vo);
         if (entity == null) return R.error("用户名或密码错误/未注册");
-        return R.ok();
+        return R.ok().setData(entity);
     }
 
     /**

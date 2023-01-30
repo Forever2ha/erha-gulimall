@@ -5,4 +5,6 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-
+spring:
+  redis:
+    host: 192.168.17.100

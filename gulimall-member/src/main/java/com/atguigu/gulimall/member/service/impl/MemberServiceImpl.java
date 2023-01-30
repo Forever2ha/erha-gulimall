@@ -36,7 +36,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     public void register(RegisterMemVo registerMemVo) {
 
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setNickname(registerMemVo.getUserName());
+        memberEntity.setUsername(registerMemVo.getUserName());
         memberEntity.setLevelId(1L);
         if (getOne(new QueryWrapper<MemberEntity>().eq("username",registerMemVo.getUserName())) != null
         ||
