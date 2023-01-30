@@ -227,4 +227,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return baseMapper.selectSkuItemSaleAttrVo(spuId);
     }
 
+    @Override
+    public List<String> listSaleAttrStringList(Long skuId) {
+        return baseMapper.selectSaleAttrStringList(skuId);
+    }
+
 }

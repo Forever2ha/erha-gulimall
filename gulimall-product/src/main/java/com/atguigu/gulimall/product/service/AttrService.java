@@ -38,5 +38,7 @@ public interface AttrService extends IService<AttrEntity> {
     List<Long> selectSearchIds(List<Long> allAttrIds);
 
     List<SkuItemVo.SkuItemSaleAttrVo> list(Long spuId);
+
+    List<String> listSaleAttrStringList(Long skuId);
 }
 

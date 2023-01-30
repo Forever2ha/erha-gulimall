@@ -24,4 +24,6 @@ public interface AttrDao extends BaseMapper<AttrEntity> {
     IPage<AttrEntity> selectNoAttrRelation(@Param("attrgroupId") Long attrgroupId, IPage<AttrEntity> page);
 
     List<SkuItemVo.SkuItemSaleAttrVo> selectSkuItemSaleAttrVo(@Param("spuId") Long spuId);
+
+    List<String> selectSaleAttrStringList(@Param("skuId") Long skuId);
 }
