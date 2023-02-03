@@ -6,6 +6,8 @@ package com.atguigu.common.constant.order;
 public class OrderConstant {
     public static final Integer autoConfirmDay = 7;
 
+    public static final String USER_ORDER_TOKEN_PREFIX = "order:token:";
+
     /**
      * 订单状态枚举
      */

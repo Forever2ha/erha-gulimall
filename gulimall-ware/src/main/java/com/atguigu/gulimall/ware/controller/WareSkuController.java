@@ -6,6 +6,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.atguigu.common.to.SkuHasStockTo;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,12 @@ public class WareSkuController {
     private WareSkuService wareSkuService;
 
 
+    @GetMapping("/lock")
+    public R testLock(){
+        // 测试给sku   46 加锁定库存，看事务能否回滚
+        wareSkuService.lockSku46();
+        return R.ok();
+    }
 
     //获取sku是否有库存
     @PostMapping("/skuHasStock")

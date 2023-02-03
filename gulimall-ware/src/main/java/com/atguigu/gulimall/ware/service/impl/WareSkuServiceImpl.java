@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.ware.service.impl;
 
 import com.atguigu.common.to.SkuHasStockTo;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import io.seata.core.context.RootContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import com.atguigu.common.utils.Query;
 import com.atguigu.gulimall.ware.dao.WareSkuDao;
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
 import com.atguigu.gulimall.ware.service.WareSkuService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("wareSkuService")
@@ -35,6 +38,13 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     public List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds) {
         if (skuIds.isEmpty()) return new ArrayList<>();
         return this.baseMapper.getHasStock(skuIds);
+    }
+
+    @Override
+    @Transactional
+    public void lockSku46() {
+        baseMapper.lock(46);
+        System.out.println("RootContext.getXID() = " + RootContext.getXID());
     }
 
 

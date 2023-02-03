@@ -67,5 +67,10 @@ spring:
           predicates:
             - Host=cart.gulimall.com
 
+        - id: route_gulimall_order
+          uri: lb://gulimall-order
+          predicates:
+            - Host=order.gulimall.com
+
 
 

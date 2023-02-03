@@ -8,3 +8,19 @@ mybatis-plus:
 spring:
   redis:
     host: 192.168.17.100
+seata:
+  tx-service-group: gulimall_ware_group
+  service:
+    vgroup-mapping:
+      gulimall_ware_group: default
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace: 77635f60-4e5a-41ab-87fc-23b7bb673d2a

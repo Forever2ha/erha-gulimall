@@ -36,4 +36,10 @@
         GROUP BY
             sku_id
     </select>
+
+    <update id="lock">
+        update wms_ware_sku
+        set stock_locked = stock_locked + 1
+        where sku_id = #{i}
+    </update>
 </mapper>
